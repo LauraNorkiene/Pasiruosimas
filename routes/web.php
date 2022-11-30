@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::middleware('auth')->group(function () {
+Route::middleware('administrator')->group(function () {
     Route::resources([
         'city'=> CityController::class,
         'hotel'=> HotelController::class
@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('city/{id}/hotels',[HotelController::class, 'cityHotels'])->name('cityHotels');
 Route::get('/image/{name}',[HotelController::class, 'display']) ->name('images');
+Route::post('posts/search',[HotelController::class, 'findPost'])->name('find.post');
+Route::put('rate/{id}', [HotelController::class, 'rateHotels'])->name('ivertinti');
 
 Auth::routes();
 

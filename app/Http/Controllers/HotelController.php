@@ -13,9 +13,22 @@ class HotelController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('hotels.index',['hotels'=>Hotel::all()]);
+
+        $cityId=$request->session()->get('filter_city_id', null);
+        $find=$request->session()->get('find_post',$request->search);
+        $orderBy=$request->session()->get('order_by', 'name');
+        $dir=$request->session()->get('order_direction', 'ASC');
+        if($cityId!=null){
+            $hotels =  Hotel::where('city_id',$cityId )->get();
+        }else{
+            $hotels=Hotel::filter($cityId)->findPosts($find)->orderBy($orderBy,$dir)->get();
+        }
+
+
+
+        return view('hotels.index',['hotels'=>$hotels, 'cities'=>City::all(), 'filter_city_id'=>$cityId,'orderBy'=>$orderBy, 'orderDirection'=>$dir]);
     }
 
     /**
@@ -123,5 +136,22 @@ class HotelController extends Controller
     public function display($name){
         $file=storage_path('app/images/'.$name);
         return response()->file( $file );
+    }
+
+    public function rateHotels(Request $request, $id){
+        $rate=Hotel::find($id);
+        $rate->rate_count++;
+        $rate->rate_sum=$rate->rate_sum+$request->ivertinimas;
+        $rate->save();
+        return redirect()->back(); }
+
+    public function findPost(Request $request) {
+        $request->session()->put('find_post', $request->name);
+        return redirect()->route('hotels.index');
+    }
+
+    public function filterHotels(Request $request){
+        $request->session()->put('filter_city_id',$request->city_id);
+        return redirect()->route('hotels.index');
     }
 }

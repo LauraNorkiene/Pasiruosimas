@@ -19,6 +19,7 @@
 
                                 <th>Kelionės trukmė</th>
                                 <th>Miestas</th>
+                                <th>Įvertinimas</th>
                                 <th colspan="2">Veiksmai</th>
                             </tr>
                             </thead>
@@ -31,6 +32,23 @@
 
                                     <td>{{ $hotel->travel_time }}</td>
                                     <td>{{ $hotel->city->name }}</td>
+                                    <td class="text-warning">{{ round($hotel->rate_sum/$hotel->rate_count, 1) }}
+                                        <i class="fa fa-star text-warning"> </i></td>
+<td>
+                                    <form action="{{ route('ivertinti', $hotel->id) }}" method="post">
+                                    @csrf
+                                    @method('PUT')
+                                    <label>Įvertinkite viešbutį: </label>
+                                    <select name="ivertinimas">
+                                    <option value="5">5 </option>
+                                    <option value="4">4 </option>
+                                    <option value="3">3 </option>
+                                    <option value="2">2 </option>
+                                    <option value="1">1 </option>
+                                    </select>
+                                    <button class="btn btn-info">Įvertinti </button>
+                                    </form>
+</td>
                                     <td>
                                         <a href="{{ route('hotel.edit', $hotel->id) }}" class="btn btn-success">Redaguoti</a>
 

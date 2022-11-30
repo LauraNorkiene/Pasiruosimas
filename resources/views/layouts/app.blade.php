@@ -41,6 +41,16 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ms-auto">
                     <!-- Authentication Links -->
+                    <li class="nav-item">
+                    <form class="input-group" method="post" {{ route('find.post') }}" >
+                    @csrf
+                    @method('GET')
+                    <input class="form-control" type="search" name="search" placeholder="{{__('Paieška pagal viešbutį')}}">
+                    <button class="btn btn-primary">
+                    <i class="fas fa-search"> Ieškoti </i>
+                    </button>
+                    </form>
+                    </li>
                     @guest
                         @if (Route::has('login'))
                             <li class="nav-item">
